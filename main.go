@@ -63,7 +63,7 @@ func init() {
 
 	flag.Parse()
 
-	log.SetLevel("warn")
+	log.SetLevel("debug")
 	logger = log.NewLogger(os.Stdout)
 
 	wd := util.OS.Pwd()

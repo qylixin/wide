@@ -86,6 +86,8 @@ var Users []*User
 // Indicates whether runs via Docker.
 var Docker bool
 
+var ConfDir string // where we store ccexamples
+
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
 	confPlayground string, confDocker bool, confUsersWorkspaces string) {
@@ -157,6 +159,7 @@ func initUsers() {
 
 func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
 	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+	ConfDir = filepath.Dir(confPath)
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)

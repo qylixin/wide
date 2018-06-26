@@ -211,7 +211,7 @@ var editors = {
         });
 
         this._initCodeMirrorHotKeys();
-        this.openStartPage();
+        // this.openStartPage();
         this._initClose();
     },
     openStartPage: function () {

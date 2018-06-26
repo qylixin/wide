@@ -29,6 +29,8 @@ import (
 	"text/template"
 	"time"
 
+	"os/exec"
+
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
@@ -407,6 +409,7 @@ func addUser(username, password, email string) string {
 
 	conf.CreateWorkspaceDir(workspace)
 	helloWorld(workspace)
+	chaincode(workspace)
 	conf.UpdateCustomizedConf(username)
 
 	http.Handle("/workspace/"+username+"/",
@@ -422,7 +425,50 @@ func addUser(username, password, email string) string {
 //  2. src/web/main.go
 func helloWorld(workspace string) {
 	consoleHello(workspace)
-	webHello(workspace)
+	//webHello(workspace)
+}
+
+func chaincode(workspace string) {
+	exampleccdir := conf.ConfDir + conf.PathSeparator + "examplecc"
+	myccdir := conf.ConfDir + conf.PathSeparator + "mycc"
+
+	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator
+	if err := os.MkdirAll(dir, 0755); nil != err {
+		logger.Error(err)
+
+		return
+	}
+
+	exsit := func(dir string) bool {
+		if _, err := os.Stat(dir); err != nil {
+			if os.IsExist(err) {
+				return true
+			}
+			return false
+		}
+		return true
+	}
+
+	if exsit(exampleccdir) {
+		cmd := exec.Command("cp", "-r", exampleccdir, dir)
+		err := cmd.Run()
+		if err != nil {
+			logger.Error(err)
+		}
+	} else {
+		logger.Error(exampleccdir + " is not exsit")
+	}
+
+	if exsit(myccdir) {
+		cmd := exec.Command("cp", "-r", myccdir, dir)
+		err := cmd.Run()
+		if err != nil {
+			logger.Error(err)
+		}
+	} else {
+		logger.Error(myccdir + " is not exsit")
+	}
+
 }
 
 func consoleHello(workspace string) {
