@@ -93,8 +93,27 @@
                                 $('#loginForm').ajaxSubmit(options);
                                 return false;
                             });
-
-
+                            function autoLogin(){
+                                var options = {
+                                    url: '{{.conf.Context}}/login',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    beforeSubmit: function () {
+                                        var username = 'root';
+                                        var password = '88888888';
+                                    },
+                                    success: function (result) {
+                                        if (!result.succ) {
+                                            $("#msg").text('{{.i18n.login_error}}').show();
+                                            return;
+                                        }
+                                        window.location.href = "{{.conf.Context}}/";
+                                    }
+                                };
+                                $('#loginForm').ajaxSubmit(options);
+                                return false;
+                            };
+                            autoLogin();
                             $("#username").keydown(function (event) {
                                 if (event.which === 13) {
                                     if ($.trim($(this).val()) === "") {
