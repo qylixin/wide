@@ -21,8 +21,8 @@
                         '{{.conf.Context}}/login',
                         { username: 'root', password: '88888888' },
                         function (result) {
-                            if (!ressult.succ) {
-                                $("#msg").text('{{.i18n.login_error}}').show();
+                            if (!result.succ) {
+                                alert("登录错误")
                                 return;
                             }
                             window.location.href = "{{.conf.Context}}/";
