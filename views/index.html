@@ -369,6 +369,8 @@
             <span class="split"></span>
             <span id="buildRun" onclick="menu.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
 
+            <span class="uploadChaincode disabled" onclick="if (!$(this).hasClass('disabled')){menu.uploadChaincode()}">上传</span>
+
             <div class="fn-right">
                 <img class="gravatar"
                      onerror="this.src='{{.conf.StaticServer}}/static/images/user-thumbnail.png'"

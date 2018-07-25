@@ -118,6 +118,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/session/save", handlerWrapper(session.SaveContentHandler))
 
 	// run
+	http.HandleFunc(conf.Wide.Context+"/upload", handlerWrapper(output.UploadHandler))
 	http.HandleFunc(conf.Wide.Context+"/build", handlerWrapper(output.BuildHandler))
 	http.HandleFunc(conf.Wide.Context+"/run", handlerWrapper(output.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/stop", handlerWrapper(output.StopHandler))

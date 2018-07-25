@@ -90,11 +90,13 @@ var menu = {
     disabled: function (list) {
         for (var i = 0, max = list.length; i < max; i++) {
             $(".menu li." + list[i]).addClass("disabled");
+            $(".uploadChaincode").addClass("disabled");
         }
     },
     undisabled: function (list) {
         for (var i = 0, max = list.length; i < max; i++) {
             $(".menu li." + list[i]).removeClass("disabled");
+            $(".uploadChaincode").removeClass("disabled");
         }
     },
     // 焦点不在菜单上时需点击展开子菜单，否则为鼠标移动展开
@@ -342,6 +344,36 @@ var menu = {
         $.ajax({
             type: 'POST',
             url: config.context + '/build',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function () {
+                bottomGroup.resetOutput();
+            },
+            success: function (result) {
+            }
+        });
+    },
+    // Test build and compress
+    uploadChaincode: function () {
+        menu.saveAllFiles();
+
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
+        if ($(".uploadChaincode").hasClass("disabled")) {
+            return false;
+        }
+
+        var request = newWideRequest();
+        request.file = currentPath;
+        request.code = wide.curEditor.getValue();
+        request.nextCmd = ""; // build only, no following operation
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/upload',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {

@@ -175,10 +175,6 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler handles request of user login.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept-Encoding, Content-Encoding, user, pwd")
-	w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
-	w.Header().Set("Content-Type", "application/json")
 	if "GET" == r.Method {
 		// show the login page
 
@@ -198,6 +194,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept-Encoding, Content-Encoding, user, pwd")
+	w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+	w.Header().Set("Content-Type", "application/json")
 
 	// non-GET request as login request
 	result := util.NewResult()
