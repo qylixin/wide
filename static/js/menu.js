@@ -341,6 +341,7 @@ var menu = {
         request.code = wide.curEditor.getValue();
         request.nextCmd = ""; // build only, no following operation
 
+        console.log("before upload chaincode")
         $.ajax({
             type: 'POST',
             url: config.context + '/build',
@@ -350,10 +351,11 @@ var menu = {
                 bottomGroup.resetOutput();
             },
             success: function (result) {
-            }
+            },
+
         });
     },
-    // Test build and compress
+    // Test build and compress if build success
     uploadChaincode: function () {
         menu.saveAllFiles();
 
@@ -380,6 +382,10 @@ var menu = {
                 bottomGroup.resetOutput();
             },
             success: function (result) {
+                console.log("success : ", result);
+            },
+            error: function (result) {
+                console.log("error : ", result);
             }
         });
     },

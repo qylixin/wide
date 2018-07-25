@@ -225,16 +225,15 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	if "" != confIP {
 		Wide.IP = confIP
 	} else {
-		//ip, err := util.Net.LocalIP()
-		//if nil != err {
-		//	logger.Error(err)
-		//
-		//	os.Exit(-1)
-		//}
-		//
-		//logger.Debugf("${ip} [%s]", ip)
-		//Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
-		Wide.IP = "0.0.0.0"
+		ip, err := util.Net.LocalIP()
+		if nil != err {
+			logger.Error(err)
+
+			os.Exit(-1)
+		}
+
+		logger.Debugf("${ip} [%s]", ip)
+		Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
 	}
 
 	if "" != confPort {
