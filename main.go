@@ -386,7 +386,8 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 //  2. request stopwatch
 //  3. i18n
 func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
-	handler := panicRecover(f)
+	handler := handlerSetOrigin(f)
+	handler = panicRecover(f)
 	handler = stopwatch(handler)
 	handler = i18nLoad(handler)
 
@@ -400,12 +401,22 @@ func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.
 //  3. request stopwatch
 //  4. i18n
 func handlerGzWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
-	handler := panicRecover(f)
+	handler := handlerSetOrigin(f)
+	handler = panicRecover(f)
 	handler = gzipWrapper(handler)
 	handler = stopwatch(handler)
 	handler = i18nLoad(handler)
 
 	return handler
+}
+
+func handlerSetOrigin(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("content-type", "application/json")
+		f(w, r)
+	}
 }
 
 // gzipWrapper wraps the process with response gzip.
