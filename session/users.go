@@ -31,9 +31,11 @@ import (
 
 	"os/exec"
 
+	"fmt"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
+	"io/ioutil"
 )
 
 const (
@@ -173,6 +175,10 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler handles request of user login.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept-Encoding, Content-Encoding, user, pwd")
+	w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+	w.Header().Set("Content-Type", "application/json")
 	if "GET" == r.Method {
 		// show the login page
 
@@ -244,6 +250,10 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 // SignUpUserHandler handles request of registering user.
 func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept-Encoding, Content-Encoding, user, pwd")
+	w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+	w.Header().Set("Content-Type", "application/json")
 	if "GET" == r.Method {
 		// show the user sign up page
 
@@ -272,10 +282,13 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	var args map[string]interface{}
 
+	fmt.Println("***********************SignUpUserHandler***********************")
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		result.Succ = false
-
+		body, err := ioutil.ReadAll(r.Body)
+		fmt.Println("body : ", string(body))
+		fmt.Println("read body err : ", err)
 		return
 	}
 
@@ -283,7 +296,12 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 	password := args["password"].(string)
 	email := args["email"].(string)
 
+	fmt.Println("username : ", username)
+	fmt.Println("password : ", password)
+	fmt.Println("email : ", email)
+
 	msg := addUser(username, password, email)
+	fmt.Println("msg : ", msg)
 	if userCreated != msg {
 		result.Succ = false
 		result.Msg = msg
