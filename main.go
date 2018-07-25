@@ -413,8 +413,9 @@ func handlerGzWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w htt
 func handlerSetOrigin(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
-		w.Header().Set("content-type", "application/json")
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type, Accept-Encoding, Content-Encoding, user, pwd")
+		w.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+		w.Header().Set("Content-Type", "application/json")
 		f(w, r)
 	}
 }
