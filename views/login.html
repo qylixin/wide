@@ -19,7 +19,7 @@
                 function autoLogin() {
                     $.post(
                         '{{.conf.Context}}/login',
-                        { username: 'root', password: '88888888' },
+                        { username: 'root', password: '88888888' ,netuuid: 'pfslneof', token: 'b273495ad21153bccd633b48905ac674', ccid: 'cc1pfslneof'},
                         function (result) {
                             if (!result.succ) {
                                 alert("登录错误")

@@ -340,6 +340,104 @@ var wide = {
             }
         });
 
+        $("#dialogUploadPrompt").dialog({
+            "modal": true,
+            "height": 52,
+            "width": 260,
+            "title": "upload chaincode",
+            "okText": config.label.go,
+            "cancelText": config.label.cancel,
+            // "afterInit": function () {
+            //     $("#dialogGoFilePrompt").on("dblclick", "li", function () {
+            //         var tId = tree.getTIdByPath($(this).find(".ft-small").text());
+            //         tree.openFile(tree.fileTree.getNodeByTId(tId));
+            //         tree.fileTree.selectNode(wide.curNode);
+            //         $("#dialogGoFilePrompt").dialog("close");
+            //         wide.curEditor.focus();
+            //     });
+            //
+            //     $("#dialogGoFilePrompt").on("click", "li", function () {
+            //         var $list = $("#dialogGoFilePrompt > .list");
+            //         $list.find("li").removeClass("selected");
+            //         $list.data("index", $(this).data("index"));
+            //         $(this).addClass("selected");
+            //     });
+            //
+            //     hotkeys.bindList($("#dialogGoFilePrompt > input"), $("#dialogGoFilePrompt > .list"), function ($selected) {
+            //         var tId = tree.getTIdByPath($selected.find(".ft-small").text());
+            //         tree.openFile(tree.fileTree.getNodeByTId(tId));
+            //         tree.fileTree.selectNode(wide.curNode);
+            //         $("#dialogGoFilePrompt").dialog("close");
+            //         wide.curEditor.focus();
+            //     });
+            //
+            //     $("#dialogGoFilePrompt > input").bind("input", function () {
+            //         var name = $("#dialogGoFilePrompt > input").val();
+            //
+            //         var request = newWideRequest();
+            //         request.path = '';
+            //         request.name = '*' + name + '*';
+            //         if (wide.curNode) {
+            //             request.path = wide.curNode.path;
+            //         }
+            //
+            //         $.ajax({
+            //             type: 'POST',
+            //             url: config.context + '/file/find/name',
+            //             data: JSON.stringify(request),
+            //             dataType: "json",
+            //             success: function (result) {
+            //                 if (!result.succ) {
+            //                     return;
+            //                 }
+            //
+            //                 var data = result.data;
+            //
+            //                 var goFileHTML = '';
+            //                 for (var i = 0, max = data.length; i < max; i++) {
+            //                     var path = data[i].path,
+            //                         name = path.substr(path.lastIndexOf("/") + 1),
+            //                         icoSkin = wide.getClassBySuffix(name.split(".")[1]);
+            //                     if (i === 0) {
+            //                         goFileHTML += '<li data-index="' + i + '" class="selected" title="'
+            //                             + path + '"><span class="'
+            //                             + icoSkin + 'ico"></span>'
+            //                             + name + '&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-small">'
+            //                             + path + '</span></li>';
+            //                     } else {
+            //                         goFileHTML += '<li data-index="' + i + '" title="'
+            //                             + path + '"><span class="' + icoSkin + 'ico"></span>'
+            //                             + name + '&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-small">'
+            //                             + path + '</span></li>';
+            //                     }
+            //                 }
+            //
+            //                 $("#dialogGoFilePrompt > ul").html(goFileHTML);
+            //             }
+            //         });
+            //     });
+            // },
+            "afterOpen": function () {
+                $("#dialogUploadPrompt > input").val('').focus();
+                $("#dialogUploadPrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+            },
+            "ok": function () {
+                var line = parseInt($("#dialogUploadPrompt > input").val()) - 1;
+                $("#dialogUploadPrompt").dialog("close");
+
+                var editor = wide.curEditor;
+                var cursor = editor.getCursor();
+
+                editor.setCursor(CodeMirror.Pos(line, cursor.ch));
+
+                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+                var cursorCoords = editor.cursorCoords({line: line - half, ch: cursor.ch}, "local");
+                editor.scrollTo(0, cursorCoords.top);
+
+                editor.focus();
+            }
+        });
+
         $("#dialogGitClonePrompt").dialog({
             "modal": true,
             "height": 52,

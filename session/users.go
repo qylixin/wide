@@ -204,12 +204,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetResult(w, r, result)
 
 	args := struct {
-		Username string
-		Password string
+		Username  string
+		Password  string
+		NetworkID string
+		CCID      string
+		Token     string
 	}{}
 
 	args.Username = r.FormValue("username")
 	args.Password = r.FormValue("password")
+	args.NetworkID = r.FormValue("networkid")
+	args.CCID = r.FormValue("ccid")
+	args.Token = r.FormValue("token")
 
 	result.Succ = false
 	for _, user := range conf.Users {
@@ -227,6 +233,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// create a HTTP session
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
 	httpSession.Values["username"] = args.Username
+	httpSession.Values["token"] = args.Token
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	if "" != conf.Wide.Context {
@@ -234,7 +241,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
+	logger.Debugf("Created a HTTP session [%s] for user [%s] in network [%s]", httpSession.Values["id"].(string), args.Username, args.NetworkID)
 }
 
 // LogoutHandler handles request of user logout (exit).

@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/remote"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"net/http"
@@ -25,13 +26,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 )
-
-var currentChaincodePkg map[string]string
-
-func init() {
-	currentChaincodePkg = make(map[string]string)
-}
 
 // UploadHandler handles request of uploading.
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +134,89 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	compressPkg := filepath.Join(parentDir, project+".tar.gz")
+	result.Msg = compressPkg
 
 	fmt.Println("compress success : ", compressPkg)
 	httpSession.Values["chaincode"] = compressPkg
+}
+
+// GetChannels handles request of get channel list.
+func GetChannels(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("*******************  GetChannels  ********************")
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
+
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+	username := httpSession.Values["username"].(string)
+	token := httpSession.Values["token"].(string)
+
+	netuuid := r.URL.Query().Get("netuuid")
+
+	channels, err := remote.GetChannel(netuuid, username, token)
+	if err != nil {
+		logger.Error(err)
+		result.Succ = false
+		result.Msg = "Get channel list failed."
+	}
+
+	result.Data = channels
+}
+
+// InstallChaincode handles request of install chaincode.
+func InstallChaincode(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("*******************  InstallChaincode  ********************")
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
+
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+	username := httpSession.Values["username"].(string)
+	token := httpSession.Values["token"].(string)
+
+	var args map[string]string
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		logger.Error(err)
+		result.Succ = false
+
+		return
+	}
+
+	fmt.Println("***********  InstallChaincode body  ************")
+	fmt.Println(args)
+
+	path := args["path"]
+	name := args["name"]
+	ccid := args["ccid"]
+	channeluuid := args["channeluuid"]
+	netuuid := args["netuuid"]
+
+	var err error
+	cc := &remote.ResponseInfo{}
+
+	if ccid == "" {
+		cc, err = remote.InstallChaincode(netuuid, channeluuid, path, name, username, token)
+
+	} else {
+		cc, err = remote.UpgradeChaincode(netuuid, ccid, path, username, token)
+	}
+
+	if err != nil {
+		logger.Error(err)
+		result.Succ = false
+		result.Msg = cc.ErrMsg
+		result.Code = strconv.Itoa(cc.ErrCode)
+		return
+	}
+
+	result.Data = cc.Data
 }

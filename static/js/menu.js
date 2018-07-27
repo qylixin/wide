@@ -378,11 +378,74 @@ var menu = {
             url: config.context + '/upload',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function () {
-                bottomGroup.resetOutput();
-            },
+
             success: function (result) {
                 console.log("success : ", result);
+                if (result.succ) {
+                    console.log(result.msg)
+                    console.log("test get channels")
+                    menu.getChannels('pfslneof')
+                    console.log("test install chaincode")
+                    // menu.installChaincode(result.msg, '', 'cc1pfslneof', '', 'pfslneof')// test update
+                    menu.installChaincode(result.msg, 'test12345', '', 'channeldhpvvlge', 'pfslneof')// test install
+                    $("#dialogUploadPrompt").dialog("upload");
+                } else {
+                    console.log("upload chaincode failed : ", result.msg)
+                }
+            },
+            error: function (result) {
+                console.log("error : ", result);
+            }
+        });
+    },
+    // install chaincode
+    installChaincode: function (path, name, ccid, channeluuid, netuuid) {
+        var request = newWideRequest();
+        request.path = path;
+        request.name = name;
+        request.ccid = ccid;
+        request.channeluuid = channeluuid;
+        request.netuuid = netuuid;
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/chaincode',
+            data: JSON.stringify(request),
+            dataType: "json",
+
+            success: function (result) {
+                console.log("success : ", result);
+                if (result.succ) {
+                    console.log(result.msg)
+                } else {
+                    console.log("upload chaincode failed : ", result.msg)
+                }
+            },
+            error: function (result) {
+                console.log("error : ", result);
+            }
+        });
+    },
+    // Get channel list
+    getChannels: function (netuuid) {
+        var request = newWideRequest();
+
+        request.netuuid = netuuid;
+
+        $.ajax({
+            type: 'GET',
+            url: config.context + '/channels',
+            // data: JSON.stringify(request),
+            data: request,
+            dataType: "json",
+
+            success: function (result) {
+                console.log("success : ", result);
+                if (result.succ) {
+                    console.log(result.data)
+                } else {
+                    console.log("get channel failed : ", result.msg)
+                }
             },
             error: function (result) {
                 console.log("error : ", result);

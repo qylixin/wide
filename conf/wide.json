@@ -15,5 +15,6 @@
     "Playground": "${home}/playground",
     "UsersWorkspaces": "${WD}/workspaces",
     "AllowRegister": true,
-    "Autocomplete": true
+    "Autocomplete": true,
+    "BcapAddress": "http://wischain.peersafe.cn:8888/v2"
 }

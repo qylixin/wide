@@ -60,6 +60,7 @@ func init() {
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 	confPlayground := flag.String("playground", "", "this will overwrite Wide.Playground if specified")
 	confUsersWorkspaces := flag.String("users_workspaces", "", "this will overwrite Wide.UsersWorkspaces if specified")
+	confBcapAddress := flag.String("bcap_address", "", "connect to bcap")
 
 	flag.Parse()
 
@@ -76,7 +77,7 @@ func init() {
 	i18n.Load()
 	event.Load()
 	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
-		*confPlayground, *confDocker, *confUsersWorkspaces)
+		*confPlayground, *confDocker, *confUsersWorkspaces, *confBcapAddress)
 
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()
@@ -119,6 +120,8 @@ func main() {
 
 	// run
 	http.HandleFunc(conf.Wide.Context+"/upload", handlerWrapper(output.UploadHandler))
+	http.HandleFunc(conf.Wide.Context+"/channels", handlerWrapper(output.GetChannels))
+	http.HandleFunc(conf.Wide.Context+"/chaincode", handlerWrapper(output.InstallChaincode))
 	http.HandleFunc(conf.Wide.Context+"/build", handlerWrapper(output.BuildHandler))
 	http.HandleFunc(conf.Wide.Context+"/run", handlerWrapper(output.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/stop", handlerWrapper(output.StopHandler))

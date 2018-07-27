@@ -72,6 +72,7 @@ type conf struct {
 	UsersWorkspaces       string // users' workspaces directory (admin defaults to ${GOPATH}, others using this)
 	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
+	BcapAddress           string // bcap address
 }
 
 // Logger.
@@ -90,11 +91,11 @@ var ConfDir string // where we store ccexamples
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+	confPlayground string, confDocker bool, confUsersWorkspaces, bcapAddress string) {
 	// XXX: ugly args list....
 
 	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-		confPlayground, confDocker, confUsersWorkspaces)
+		confPlayground, confDocker, confUsersWorkspaces, bcapAddress)
 	initUsers()
 }
 
@@ -158,7 +159,7 @@ func initUsers() {
 }
 
 func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+	confPlayground string, confDocker bool, confUsersWorkspaces, bcapAddress string) {
 	ConfDir = filepath.Dir(confPath)
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
@@ -271,6 +272,10 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
 	if "" != confChannel {
 		Wide.Channel = confChannel
+	}
+
+	if bcapAddress != "" {
+		Wide.BcapAddress = bcapAddress
 	}
 }
 

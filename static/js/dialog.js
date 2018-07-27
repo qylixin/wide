@@ -287,6 +287,45 @@
 
             $("#" + id + "Dialog .dialog-footer button:eq(0)").focus();
         },
+        _uploadDialog: function (target, msg) {
+            var inst = this._getInst(target);
+            var id = inst.id,
+                settings = inst.settings,
+                top = "", left = "",
+                $dialog = $("#" + id + "Dialog"),
+                windowH = $(window).height(),
+                windowW = $(window).width(),
+                dialogH = settings.height ? settings.height : parseInt(windowH * 0.6),
+                dialogW = settings.width ? settings.width : parseInt(windowW * 0.6);
+
+            // Sets position.
+            if (settings.position) {
+                top = settings.position.top;
+                left = settings.position.left;
+            } else {
+                // 20(footer) + 23(header)
+                top = parseInt((windowH - dialogH - 43) / 2);
+                if (top < 0) {
+                    top = 0;
+                }
+                left = parseInt((windowW - dialogW) / 2);
+            }
+            $dialog.css({
+                "top": top + "px",
+                "left": left + "px"
+            }).show();
+
+            if (settings.modal) {
+                var styleClass = this._getDefaults($.dialog._defaults, settings, "styleClass");
+                $("." + styleClass.background).show();
+            }
+
+            if (typeof settings.afterOpen === "function") {
+                settings.afterOpen(msg);
+            }
+
+            $("#" + id + "Dialog .dialog-footer button:eq(0)").focus();
+        },
         _updateDialog: function (target, data) {
             var inst = this._getInst(target);
             var id = inst.id,
@@ -358,7 +397,6 @@
 
     $.fn.dialog = function (options) {
         var otherArgs = Array.prototype.slice.call(arguments);
-
         if (typeof options === 'string') {
             otherArgs.shift();
             return $.dialog['_' + options + 'Dialog'].apply($.dialog, [this[0]].concat(otherArgs));
