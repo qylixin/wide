@@ -82,6 +82,7 @@ func InstallChaincode(netuuid, channeluuid, path, name, user, token string) (*Re
 	request := NewRequest(conf.Wide.BcapAddress, "/chaincode")
 	request.SetQuery("netuuid", netuuid)
 	request.SetQuery("channeluuid", channeluuid)
+	request.SetQuery("type", "1")
 	request.SetQuery("name", name)
 	request.SetHeader("user", user)
 	request.SetHeader("token", token)
@@ -114,6 +115,7 @@ func UpgradeChaincode(netuuid, ccid, path, user, token string) (*ResponseInfo, e
 
 	request := NewRequest(conf.Wide.BcapAddress, "/chaincode/"+ccid)
 	request.SetQuery("netuuid", netuuid)
+	request.SetQuery("type", "1")
 	request.SetHeader("user", user)
 	request.SetHeader("token", token)
 	request.SetFile(path)
