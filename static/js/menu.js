@@ -452,6 +452,32 @@ var menu = {
             }
         });
     },
+    // Get chaincode list
+    getChaincodes: function (netuuid) {
+        var request = newWideRequest();
+
+        request.netuuid = netuuid;
+
+        $.ajax({
+            type: 'GET',
+            url: config.context + '/chaincodes',
+            // data: JSON.stringify(request),
+            data: request,
+            dataType: "json",
+
+            success: function (result) {
+                console.log("success : ", result);
+                if (result.succ) {
+                    console.log(result.data)
+                } else {
+                    console.log("get channel failed : ", result.msg)
+                }
+            },
+            error: function (result) {
+                console.log("error : ", result);
+            }
+        });
+    },
     _initPreference: function () {
         $("#dialogPreference").load(config.context + '/preference', function () {
             $("#dialogPreference input").keyup(function () {

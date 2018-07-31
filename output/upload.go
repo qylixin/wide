@@ -167,6 +167,33 @@ func GetChannels(w http.ResponseWriter, r *http.Request) {
 	result.Data = channels
 }
 
+// GetChaincodes handles request of get chaincode list.
+func GetChaincodes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("*******************  GetChaincodes  ********************")
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
+
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+	username := httpSession.Values["username"].(string)
+	token := httpSession.Values["token"].(string)
+
+	netuuid := r.URL.Query().Get("netuuid")
+
+	channels, err := remote.GetChaincode(netuuid, username, token)
+	if err != nil {
+		logger.Error(err)
+		result.Succ = false
+		result.Msg = "Get channel list failed."
+	}
+
+	result.Data = channels
+}
+
 // InstallChaincode handles request of install chaincode.
 func InstallChaincode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("*******************  InstallChaincode  ********************")

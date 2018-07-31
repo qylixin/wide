@@ -121,6 +121,7 @@ func main() {
 	// run
 	http.HandleFunc(conf.Wide.Context+"/upload", handlerWrapper(output.UploadHandler))
 	http.HandleFunc(conf.Wide.Context+"/channels", handlerWrapper(output.GetChannels))
+	http.HandleFunc(conf.Wide.Context+"/chaincodes", handlerWrapper(output.GetChaincodes))
 	http.HandleFunc(conf.Wide.Context+"/chaincode", handlerWrapper(output.InstallChaincode))
 	http.HandleFunc(conf.Wide.Context+"/build", handlerWrapper(output.BuildHandler))
 	http.HandleFunc(conf.Wide.Context+"/run", handlerWrapper(output.RunHandler))

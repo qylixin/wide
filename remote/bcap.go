@@ -29,6 +29,7 @@ type CCBase struct {
 	PrePeerUUIDs  string    `json:"prepeeruuids"`                  //预安装cc的peer列表
 	InstPeerUUIDs string    `json:"instpeeruuids"`                 //已实例化的Peer列表
 	OrgUUIDs      string    `json:"-"`                             //实例化前绑定通道的组织列表
+	Type          string    `json:"type"`                          //安装方式 0：源码上传， 1：在线合约编辑
 	CreatedAt     time.Time `json:"createAt"`
 	UpdatedAt     time.Time `json:"updateAt"`
 }
@@ -139,4 +140,31 @@ func UpgradeChaincode(netuuid, ccid, path, user, token string) (*ResponseInfo, e
 	fmt.Println("******************** upgrade chaincode  *********************")
 
 	return response, nil
+}
+
+func GetChaincode(netuuid, user, token string) ([]*Chaincode, error) {
+
+	fmt.Println("address : ", conf.Wide.BcapAddress)
+	request := NewRequest(conf.Wide.BcapAddress, "/chaincodes")
+	request.SetQuery("netuuid", netuuid)
+	request.SetHeader("user", user)
+	request.SetHeader("token", token)
+	res := request.GET()
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	response := &ResponseInfo{}
+	data := make([]*Chaincode, 0)
+	response.Data = &data
+
+	if err := json.Unmarshal(res.Data, response); err != nil {
+		return nil, err
+	}
+
+	fmt.Println("********************  chaincodes  *********************")
+	fmt.Println(data)
+	fmt.Println("********************  chaincodes  *********************")
+
+	return data, nil
 }
