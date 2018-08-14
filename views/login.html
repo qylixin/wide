@@ -16,16 +16,35 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery.form.js"></script>
         <script type="text/javascript">
             (function () {
+                // {{.netuuid}}
                 function autoLogin() {
                     $.post(
                         '{{.conf.Context}}/login',
-                        { username: 'root', password: '88888888' ,netuuid: 'pfslneof', token: 'b273495ad21153bccd633b48905ac674', ccid: 'cc1pfslneof'},
+                        { 
+                            username: "{{.username}}", 
+                            password: '88888888',
+                            networkid: "{{.netuuid}}", 
+                            token: "{{.token}}", 
+                            ccid: "{{.ccid}}"
+                        },
                         function (result) {
                             if (!result.succ) {
                                 alert("登录错误")
                                 return;
                             }
-                            window.location.href = "{{.conf.Context}}/";
+                            sessionStorage.setItem("username", "{{.username}}");
+                            sessionStorage.setItem("netuuid", "{{.netuuid}}");
+                            sessionStorage.setItem("token", "{{.token}}");
+                            sessionStorage.setItem("ccid", "{{.ccid}}");
+                            // var username = sessionStorage.getItem("username");
+                            // var netuuid = sessionStorage.getItem("netuuid");
+                            // var token = sessionStorage.getItem("token");
+                            // var ccid = sessionStorage.getItem("ccid");
+                            // console.log(username)
+                            // console.log(netuuid)
+                            // console.log(token)
+                            // console.log(ccid)
+                            window.location.href = "{{.conf.Context}}/" + window.location.href;
                         }
                     );
                 };
