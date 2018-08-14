@@ -16,7 +16,7 @@
     "Keymap": "wide",
     "Created": 1531479981744425920,
     "Updated": 1531479981744425920,
-    "Lived": 1531479981744425920,
+    "Lived": 1534234919615203100,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "inherit",
@@ -24,5 +24,23 @@
         "Theme": "wide",
         "TabSize": "4"
     },
-    "LatestSessionContent": null
+    "LatestSessionContent": {
+        "fileTree": [],
+        "files": [],
+        "currentFile": "",
+        "layout": {
+            "side": {
+                "state": "normal",
+                "size": 200
+            },
+            "sideRight": {
+                "state": "normal",
+                "size": 200
+            },
+            "bottom": {
+                "state": "normal",
+                "size": 100
+            }
+        }
+    }
 }

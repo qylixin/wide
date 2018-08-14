@@ -177,9 +177,14 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the login page
+		netuuid := r.URL.Query().Get("netuuid")
+		username := r.URL.Query().Get("username")
+		token := r.URL.Query().Get("token")
+		ccid := r.URL.Query().Get("ccid")
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year()}
+			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year(), 
+			"netuuid":netuuid,"username":username, "token":token,"ccid":ccid,}
 
 		t, err := template.ParseFiles("views/login.html")
 
