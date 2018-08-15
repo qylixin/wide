@@ -15,23 +15,23 @@ type DetailChannelInfo struct {
 }
 
 type CCBase struct {
-	ID            uint      `json:"id" gorm:"primary_key"`         //需要做唯一索引,所以必须存在。
-	UUID          string    `json:"uuid" gorm:"not null,index"`    //后端识别名
-	Version       string    `json:"version"`                       //版本
-	NetUUID       string    `json:"netuuid" gorm:"not null,index"` //对应网络
-	ChannelUUID   string    `json:"channeluuid"`                   //对应channel
-	EndorsePolicy string    `json:"endorsePolicy"`                 //背书策略
-	InitParam     string    `json:"initParam"`                     //初始化参数
-	PkgInfo       string    `json:"pkgInfo"`                       //上传文件hash
-	State         int       `json:"state"`                         //状态（0: 未启动， 1:异常, 2：启动成功, 3：升级未启动 4.待升级）
-	InstState     int       `json:"inst_state"`                    //实例化状态(0:未实例化，1:已经实例化过了)
-	PeerUUIDs     string    `json:"peeruuids"`                     //已安装cc的peer列表
-	PrePeerUUIDs  string    `json:"prepeeruuids"`                  //预安装cc的peer列表
-	InstPeerUUIDs string    `json:"instpeeruuids"`                 //已实例化的Peer列表
-	OrgUUIDs      string    `json:"-"`                             //实例化前绑定通道的组织列表
-	Type          string    `json:"type"`                          //安装方式 0：源码上传， 1：在线合约编辑
-	CreatedAt     time.Time `json:"createAt"`
-	UpdatedAt     time.Time `json:"updateAt"`
+  ID            uint      `json:"id" gorm:"primary_key"`          //需要做唯一索引,所以必须存在。
+  UUID          string    `json:"uuid" gorm:"not null,index"`     //后端识别名
+  Version       string    `json:"version"`                        //版本
+  NetUUID       string    `json:"net_uuid" gorm:"not null,index"` //对应网络
+  ChannelUUID   string    `json:"channel_uuid"`                   //对应channel
+  EndorsePolicy string    `json:"endorse_policy"`                 //背书策略
+  InitParam     string    `json:"init_param"`                     //初始化参数
+  PkgInfo       string    `json:"pkg_info"`                       //上传文件hash
+  State         int       `json:"state"`                          //状态（0: 未启动， 1:异常, 2：启动成功, 3：升级未启动 4.待升级）
+  InstState     int       `json:"inst_state"`                     //实例化状态(0:未实例化，1:已经实例化过了)
+  PeerUUIDs     string    `json:"peer_uuids"`                     //已安装cc的peer列表
+  PrePeerUUIDs  string    `json:"pre_peer_uuids"`                 //预安装cc的peer列表
+  InstPeerUUIDs string    `json:"inst_peer_uuids"`                //已实例化的Peer列表
+  OrgUUIDs      string    `json:"-"`                              //实例化前绑定通道的组织列表
+  Type          string    `json:"type"`                           //安装方式 0：源码上传， 1：在线合约编辑
+  CreatedAt     time.Time `json:"created_at"`
+  UpdatedAt     time.Time `json:"updated_at"`
 }
 
 type Chaincode struct {
@@ -40,13 +40,13 @@ type Chaincode struct {
 }
 
 type Channel struct {
-	ID        uint      `json:"id" gorm:"primary_key"`          //需要做唯一索引,所以必须存在。
-	UUID      string    `json:"uuid" gorm:"not null,index"`     //后端识别名
-	Name      string    `gorm:"not null" json:"name"`           //名称(任意字符串)
-	NetUUID   string    `json:"netuuid"  gorm:"not null,index"` //对应网络
-	CreatedAt time.Time `json:"createAt"`
-	UpdatedAt time.Time `json:"updateAt"`
-	Type      uint      `json:"type" gorm:"not null"` //channel类型,0共有，1私有，2需验证
+  ID        uint      `json:"id" gorm:"primary_key"`           //需要做唯一索引,所以必须存在。
+  UUID      string    `json:"uuid" gorm:"not null,index"`      //后端识别名
+  Name      string    `gorm:"not null" json:"name"`            //名称(任意字符串)
+  NetUUID   string    `json:"net_uuid"  gorm:"not null,index"` //对应网络
+  CreatedAt time.Time `json:"created_at"`
+  UpdatedAt time.Time `json:"updated_at"`
+  Type      uint      `json:"type" gorm:"not null"` //channel类型,0共有，1私有，2需验证
 }
 
 func GetChannel(netuuid, user, token string) ([]*DetailChannelInfo, error) {

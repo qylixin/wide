@@ -40,7 +40,8 @@
                     <span>{{.i18n.file}}</span>
                     <div class="frame">
                         <ul>     
-                            <li class="save-all disabled" onclick="if (!$(this).hasClass('disabled')){menu.saveAllFiles()}">
+                            <!-- <li class="save-all disabled" onclick="if (!$(this).hasClass('disabled')){menu.saveAllFiles()}"> -->
+                            <li class="save-all" onclick="if (!$(this).hasClass('disabled')){menu.saveAllFiles()}">
                                 <span class="font-ico ico-save"></span>
                                 <span>{{.i18n.save_all_files}}</span>
                                 <span class="fn-right ft-small">Shift-Ctrl-S</span>
@@ -369,7 +370,8 @@
             <span class="split"></span>
             <span id="buildRun" onclick="menu.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
 
-            <span class="uploadChaincode disabled" onclick="if (!$(this).hasClass('disabled')){menu.uploadChaincode()}">上传</span>
+            <!-- <span class="uploadChaincode disabled" onclick="if (!$(this).hasClass('disabled')){menu.uploadChaincode()}">上传</span> -->
+            <span class="uploadChaincode" onclick="menu.uploadChaincode()">上传</span>
 
             <div class="fn-right">
                 <img class="gravatar"
@@ -577,7 +579,9 @@
             <input/>
         </div>
         <div id="dialogUploadPrompt" class="dialog-prompt fn-none">
+            <span>智能合约名称</span>
             <input/>
+            <span>关联业务通道</span>
             <select></select>
         </div>
         <div id="dialogGitClonePrompt" class="dialog-prompt fn-none">

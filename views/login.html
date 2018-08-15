@@ -18,6 +18,10 @@
             (function () {
                 // {{.netuuid}}
                 function autoLogin() {
+                    sessionStorage.setItem("username", "{{.username}}");
+                    sessionStorage.setItem("netuuid", "{{.netuuid}}");
+                    sessionStorage.setItem("token", "{{.token}}");
+                    sessionStorage.setItem("ccid", "{{.ccid}}");
                     $.post(
                         '{{.conf.Context}}/login',
                         { 
@@ -32,10 +36,7 @@
                                 alert("登录错误")
                                 return;
                             }
-                            sessionStorage.setItem("username", "{{.username}}");
-                            sessionStorage.setItem("netuuid", "{{.netuuid}}");
-                            sessionStorage.setItem("token", "{{.token}}");
-                            sessionStorage.setItem("ccid", "{{.ccid}}");
+                            
                             // var username = sessionStorage.getItem("username");
                             // var netuuid = sessionStorage.getItem("netuuid");
                             // var token = sessionStorage.getItem("token");

@@ -332,9 +332,9 @@ var menu = {
             return false;
         }
 
-        if ($(".menu li.build").hasClass("disabled")) {
-            return false;
-        }
+        // if ($(".menu li.build").hasClass("disabled")) {
+        //     return false;
+        // }
 
         var request = newWideRequest();
         request.file = currentPath;
@@ -351,51 +351,11 @@ var menu = {
                 bottomGroup.resetOutput();
             },
             success: function (result) {
+                console.log("resultresultresultresultresultresult")
+                console.log(result)
+                
             },
 
-        });
-    },
-    // Test build and compress if build success
-    uploadChaincode: function () {
-        menu.saveAllFiles();
-
-        var currentPath = editors.getCurrentPath();
-        if (!currentPath) {
-            return false;
-        }
-
-        if ($(".uploadChaincode").hasClass("disabled")) {
-            return false;
-        }
-
-        var request = newWideRequest();
-        request.file = currentPath;
-        request.code = wide.curEditor.getValue();
-        request.nextCmd = ""; // build only, no following operation
-
-        $.ajax({
-            type: 'POST',
-            url: config.context + '/upload',
-            data: JSON.stringify(request),
-            dataType: "json",
-
-            success: function (result) {
-                console.log("success : ", result);
-                if (result.succ) {
-                    console.log(result.msg)
-                    console.log("test get channels")
-                    menu.getChannels('pfslneof')
-                    console.log("test install chaincode")
-                    // menu.installChaincode(result.msg, '', 'cc1pfslneof', '', 'pfslneof')// test update
-                    menu.installChaincode(result.msg, 'test12345', '', 'channeldhpvvlge', 'pfslneof')// test install
-                    $("#dialogUploadPrompt").dialog("upload");
-                } else {
-                    console.log("upload chaincode failed : ", result.msg)
-                }
-            },
-            error: function (result) {
-                console.log("error : ", result);
-            }
         });
     },
     // install chaincode
@@ -406,6 +366,8 @@ var menu = {
         request.ccid = ccid;
         request.channeluuid = channeluuid;
         request.netuuid = netuuid;
+        request.username = sessionStorage.getItem("username");
+        request.token = sessionStorage.getItem("token");
 
         $.ajax({
             type: 'POST',
@@ -426,12 +388,76 @@ var menu = {
             }
         });
     },
+    // Test build and compress if build success
+    uploadChaincode: function () {
+        console.log(000000000)
+        
+        menu.saveAllFiles();
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+        // if ($(".uploadChaincode").hasClass("disabled")) {
+        //     return false;
+        // }
+        console.log(33333333333333)
+
+        var request = newWideRequest();
+        request.file = currentPath;
+        request.code = wide.curEditor.getValue();
+        request.nextCmd = ""; // build only, no following operation
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/upload',
+            data: JSON.stringify(request),
+            dataType: "json",
+
+            success: function (result) {
+            console.log(config.context + '/upload')
+                
+                console.log("success : ", result);
+                if (result.succ) {
+                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                    console.log(result)
+                    
+                    console.log(result.msg)
+                    sessionStorage.setItem("uploadPath", result.msg);
+                    var ccid = sessionStorage.getItem("ccid");
+                    if (ccid == "") {
+                        $("#dialogUploadPrompt").dialog("upload");
+                    } else {
+                        var name = "";
+                        var uploadPath = sessionStorage.getItem("uploadPath");
+                        var channeluuid = "";
+                        var netuuid = sessionStorage.getItem("netuuid");
+                        var channels = sessionStorage.getItem("channels");
+                        channels = JSON.parse(channels);
+                        for (var i = 0, max = channels.length; i < max; i++) {
+                            if(channels[i].ccs[0] && channels[i].ccs[0].uuid == ccid){
+                                name = channels[i].name;
+                                channeluuid = channels[i].ccs[0].channel_uuid;
+                            }
+                        }
+                        menu.installChaincode(uploadPath, name, ccid, channeluuid, netuuid);
+                    }
+                    
+                } else {
+                    console.log("upload chaincode failed : ", result.msg)
+                }
+            },
+            error: function (result) {
+                console.log("error : ", result);
+            }
+        });
+    },
     // Get channel list
     getChannels: function (netuuid) {
         var request = newWideRequest();
 
         request.netuuid = netuuid;
-
+        request.username = sessionStorage.getItem("username");
+        request.token = sessionStorage.getItem("token");
         $.ajax({
             type: 'GET',
             url: config.context + '/channels',
@@ -443,6 +469,7 @@ var menu = {
                 console.log("success : ", result);
                 if (result.succ) {
                     console.log(result.data)
+                    sessionStorage.setItem("channels", JSON.stringify(result.data));
                 } else {
                     console.log("get channel failed : ", result.msg)
                 }
@@ -457,6 +484,8 @@ var menu = {
         var request = newWideRequest();
 
         request.netuuid = netuuid;
+        request.username = sessionStorage.getItem("username");
+        request.token = sessionStorage.getItem("token");
 
         $.ajax({
             type: 'GET',
