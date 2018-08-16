@@ -181,10 +181,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.URL.Query().Get("username")
 		token := r.URL.Query().Get("token")
 		ccid := r.URL.Query().Get("ccid")
+		email := r.URL.Query().Get("email")
+		
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
 			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year(), 
-			"netuuid":netuuid,"username":username, "token":token,"ccid":ccid,}
+			"netuuid":netuuid,"username":username, "token":token,"ccid":ccid,"email":email}
 
 		t, err := template.ParseFiles("views/login.html")
 
