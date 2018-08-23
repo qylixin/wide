@@ -227,6 +227,8 @@ func InstallChaincode(w http.ResponseWriter, r *http.Request) {
 	channeluuid := args["channeluuid"]
 	netuuid := args["netuuid"]
 
+	defer os.Remove(path)
+
 	var err error
 	cc := &remote.ResponseInfo{}
 

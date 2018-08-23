@@ -3,11 +3,10 @@ services:
   wide:
     container_name: wide
     image: peersafe/wide
-    command: ./wide -docker=true -ip=106.75.28.174 -channel=ws://106.75.28.174:7070 -server=0.0.0.0:7070 -log_level=debug
+    command: ./wide -docker=true -ip=192.168.0.116 -channel=ws://192.168.0.116:7070 -server=0.0.0.0:7070 -log_level=debug
     ports:
       - 7070:7070
     volumes:
-      - ./users:/opt/gopath/src/github.com/b3log/wide/conf/users
-      - ./wide_conf:/go/src/github.com/b3log/conf
-      - ./wide_workspace:/go/src/github.com/b3log/workspace
-      - ./wide_static:/go/src/github.com/b3log/static
+      - ./conf:/opt/go/src/github.com/b3log/conf
+      - ./workspaces:/opt/go/src/github.com/b3log/workspaces
+      - ./static:/opt/go/src/github.com/b3log/static

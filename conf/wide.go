@@ -442,6 +442,9 @@ func initWorkspaceDirs() {
 	}
 
 	for _, path := range paths {
+		if path == "" {
+			continue
+		}
 		CreateWorkspaceDir(path)
 	}
 }

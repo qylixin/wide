@@ -35,7 +35,6 @@ import (
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
-	"io/ioutil"
 )
 
 const (
@@ -294,21 +293,19 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	var args map[string]interface{}
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	email := r.FormValue("email")
 
 	fmt.Println("***********************SignUpUserHandler***********************")
-	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		logger.Error(err)
-		result.Succ = false
-		body, err := ioutil.ReadAll(r.Body)
-		fmt.Println("body : ", string(body))
-		fmt.Println("read body err : ", err)
-		return
-	}
-
-	username := args["username"].(string)
-	password := args["password"].(string)
-	email := args["email"].(string)
+	//if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+	//	logger.Error(err)
+	//	result.Succ = false
+	//	body, err := ioutil.ReadAll(r.Body)
+	//	fmt.Println("body : ", string(body))
+	//	fmt.Println("read body err : ", err)
+	//	return
+	//}
 
 	fmt.Println("username : ", username)
 	fmt.Println("password : ", password)
