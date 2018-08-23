@@ -7,7 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 package comm
 
 import (
-	"crypto/tls"
 	"time"
 
 	"github.com/spf13/viper"
@@ -23,85 +22,34 @@ var (
 	// Max send and receive bytes for grpc clients and servers
 	maxRecvMsgSize = 100 * 1024 * 1024
 	maxSendMsgSize = 100 * 1024 * 1024
-	// Default peer keepalive options
-	keepaliveOptions = &KeepaliveOptions{
-		ClientInterval:    time.Duration(1) * time.Minute,  // 1 min
-		ClientTimeout:     time.Duration(20) * time.Second, // 20 sec - gRPC default
-		ServerInterval:    time.Duration(2) * time.Hour,    // 2 hours - gRPC default
-		ServerTimeout:     time.Duration(20) * time.Second, // 20 sec - gRPC default
-		ServerMinInterval: time.Duration(1) * time.Minute,  // match ClientInterval
-	}
-	// strong TLS cipher suites
-	tlsCipherSuites = []uint16{
-		tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-		tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-		tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-		tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
-		tls.TLS_RSA_WITH_AES_256_GCM_SHA384,
+	// Default keepalive options
+	keepaliveOptions = KeepaliveOptions{
+		ClientKeepaliveTime:    60,   // 1 min
+		ClientKeepaliveTimeout: 20,   // 20 sec - gRPC default
+		ServerKeepaliveTime:    7200, // 2 hours - gRPC default
+		ServerKeepaliveTimeout: 20,   // 20 sec - gRPC default
 	}
 	// Default orderer address
 	defaultOrdererAddr string
 )
 
-// ServerConfig defines the parameters for configuring a GRPCServer instance
-type ServerConfig struct {
-	// SecOpts defines the security parameters
-	SecOpts *SecureOptions
-	// KaOpts defines the keepalive parameters
-	KaOpts *KeepaliveOptions
-}
-
-// ClientConfig defines the parameters for configuring a GRPCClient instance
-type ClientConfig struct {
-	// SecOpts defines the security parameters
-	SecOpts *SecureOptions
-	// KaOpts defines the keepalive parameters
-	KaOpts *KeepaliveOptions
-	// Timeout specifies how long the client will block when attempting to
-	// establish a connection
-	Timeout time.Duration
-}
-
-// SecureOptions defines the security parameters (e.g. TLS) for a
-// GRPCServer instance
-type SecureOptions struct {
-	// PEM-encoded X509 public key to be used for TLS communication
-	Certificate []byte
-	// PEM-encoded private key to be used for TLS communication
-	Key []byte
-	// Set of PEM-encoded X509 certificate authorities used by clients to
-	// verify server certificates
-	ServerRootCAs [][]byte
-	// Set of PEM-encoded X509 certificate authorities used by servers to
-	// verify client certificates
-	ClientRootCAs [][]byte
-	// Whether or not to use TLS for communication
-	UseTLS bool
-	// Whether or not TLS client must present certificates for authentication
-	RequireClientCert bool
-	// CipherSuites is a list of supported cipher suites for TLS
-	CipherSuites []uint16
-}
-
 // KeepAliveOptions is used to set the gRPC keepalive settings for both
 // clients and servers
 type KeepaliveOptions struct {
-	// ClientInterval is the duration after which if the client does not see
-	// any activity from the server it pings the server to see if it is alive
-	ClientInterval time.Duration
-	// ClientTimeout is the duration the client waits for a response
+	// ClientKeepaliveTime is the duration in seconds after which if the client
+	// does not see any activity from the server it pings the server to see
+	// if it is alive
+	ClientKeepaliveTime int
+	// ClientKeepaliveTimeout is the duration the client waits for a response
 	// from the server after sending a ping before closing the connection
-	ClientTimeout time.Duration
-	// ServerInterval is the duration after which if the server does not see
-	// any activity from the client it pings the client to see if it is alive
-	ServerInterval time.Duration
-	// ServerTimeout is the duration the server waits for a response
+	ClientKeepaliveTimeout int
+	// ServerKeepaliveTime is the duration in seconds after which if the server
+	// does not see any activity from the client it pings the client to see
+	// if it is alive
+	ServerKeepaliveTime int
+	// ServerKeepaliveTimeout is the duration the server waits for a response
 	// from the client after sending a ping before closing the connection
-	ServerTimeout time.Duration
-	// ServerMinInterval is the minimum permitted time between client pings.
-	// If clients send pings more frequently, the server will disconnect them
-	ServerMinInterval time.Duration
+	ServerKeepaliveTimeout int
 }
 
 // cacheConfiguration caches common package scoped variables
@@ -154,27 +102,23 @@ func SetMaxSendMsgSize(size int) {
 	maxSendMsgSize = size
 }
 
-// DefaultKeepaliveOptions returns sane default keepalive settings for gRPC
-// servers and clients
-func DefaultKeepaliveOptions() *KeepaliveOptions {
-	return keepaliveOptions
+// SetKeepaliveOptions sets the gRPC keepalive options for both clients and
+// servers
+func SetKeepaliveOptions(ka KeepaliveOptions) {
+	keepaliveOptions = ka
 }
 
-// ServerKeepaliveOptions returns gRPC keepalive options for server.  If
-// opts is nil, the default keepalive options are returned
-func ServerKeepaliveOptions(ka *KeepaliveOptions) []grpc.ServerOption {
-	// use default keepalive options if nil
-	if ka == nil {
-		ka = keepaliveOptions
-	}
+// ServerKeepaliveOptions returns the gRPC keepalive options for servers
+func ServerKeepaliveOptions() []grpc.ServerOption {
 	var serverOpts []grpc.ServerOption
 	kap := keepalive.ServerParameters{
-		Time:    ka.ServerInterval,
-		Timeout: ka.ServerTimeout,
+		Time:    time.Duration(keepaliveOptions.ServerKeepaliveTime) * time.Second,
+		Timeout: time.Duration(keepaliveOptions.ServerKeepaliveTimeout) * time.Second,
 	}
 	serverOpts = append(serverOpts, grpc.KeepaliveParams(kap))
 	kep := keepalive.EnforcementPolicy{
-		MinTime: ka.ServerMinInterval,
+		// needs to match clientKeepalive
+		MinTime: time.Duration(keepaliveOptions.ClientKeepaliveTime) * time.Second,
 		// allow keepalive w/o rpc
 		PermitWithoutStream: true,
 	}
@@ -182,18 +126,12 @@ func ServerKeepaliveOptions(ka *KeepaliveOptions) []grpc.ServerOption {
 	return serverOpts
 }
 
-// ClientKeepaliveOptions returns gRPC keepalive options for clients.  If
-// opts is nil, the default keepalive options are returned
-func ClientKeepaliveOptions(ka *KeepaliveOptions) []grpc.DialOption {
-	// use default keepalive options if nil
-	if ka == nil {
-		ka = keepaliveOptions
-	}
-
+// ClientKeepaliveOptions returns the gRPC keepalive options for clients
+func ClientKeepaliveOptions() []grpc.DialOption {
 	var dialOpts []grpc.DialOption
 	kap := keepalive.ClientParameters{
-		Time:                ka.ClientInterval,
-		Timeout:             ka.ClientTimeout,
+		Time:                time.Duration(keepaliveOptions.ClientKeepaliveTime) * time.Second,
+		Timeout:             time.Duration(keepaliveOptions.ClientKeepaliveTimeout) * time.Second,
 		PermitWithoutStream: true,
 	}
 	dialOpts = append(dialOpts, grpc.WithKeepaliveParams(kap))

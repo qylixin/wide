@@ -17,11 +17,12 @@ package signer
 
 import (
 	"crypto"
+	"errors"
+	"fmt"
 	"io"
 
 	"github.com/hyperledger/fabric/bccsp"
 	"github.com/hyperledger/fabric/bccsp/utils"
-	"github.com/pkg/errors"
 )
 
 // bccspCryptoSigner is the BCCSP-based implementation of a crypto.Signer
@@ -48,17 +49,17 @@ func New(csp bccsp.BCCSP, key bccsp.Key) (crypto.Signer, error) {
 	// Marshall the bccsp public key as a crypto.PublicKey
 	pub, err := key.PublicKey()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed getting public key")
+		return nil, fmt.Errorf("failed getting public key [%s]", err)
 	}
 
 	raw, err := pub.Bytes()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed marshalling public key")
+		return nil, fmt.Errorf("failed marshalling public key [%s]", err)
 	}
 
 	pk, err := utils.DERToPublicKey(raw)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed marshalling der to public key")
+		return nil, fmt.Errorf("failed marshalling der to public key [%s]", err)
 	}
 
 	return &bccspCryptoSigner{csp, key, pk}, nil

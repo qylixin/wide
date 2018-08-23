@@ -7,10 +7,12 @@ SPDX-License-Identifier: Apache-2.0
 package msp
 
 import (
-	"time"
-
 	"github.com/hyperledger/fabric/protos/msp"
 )
+
+// FIXME: we need better comments on the interfaces!!
+// FIXME: we need better comments on the interfaces!!
+// FIXME: we need better comments on the interfaces!!
 
 // IdentityDeserializer is implemented by both MSPManger and MSP
 type IdentityDeserializer interface {
@@ -19,9 +21,6 @@ type IdentityDeserializer interface {
 	// an msp that is different from this one that is performing
 	// the deserialization.
 	DeserializeIdentity(serializedIdentity []byte) (Identity, error)
-
-	// IsWellFormed checks if the given identity can be deserialized into its provider-specific form
-	IsWellFormed(identity *msp.SerializedIdentity) error
 }
 
 // Membership service provider APIs for Hyperledger Fabric:
@@ -64,9 +63,6 @@ type MSP interface {
 
 	// Setup the MSP instance according to configuration information
 	Setup(config *msp.MSPConfig) error
-
-	// GetVersion returns the version of this MSP
-	GetVersion() MSPVersion
 
 	// GetType returns the provider type
 	GetType() ProviderType
@@ -116,12 +112,6 @@ type OUIdentifier struct {
 // at the peer side when verifying certificates that transactions are signed
 // with, and verifying signatures that correspond to these certificates.///
 type Identity interface {
-
-	// ExpiresAt returns the time at which the Identity expires.
-	// If the returned time is the zero value, it implies
-	// the Identity does not expire, or that its expiration
-	// time is unknown
-	ExpiresAt() time.Time
 
 	// GetIdentifier returns the identifier of that identity
 	GetIdentifier() *IdentityIdentifier
@@ -196,20 +186,5 @@ type ProviderType int
 // The ProviderType of a member relative to the member API
 const (
 	FABRIC ProviderType = iota // MSP is of FABRIC type
-	IDEMIX                     // MSP is of IDEMIX type
 	OTHER                      // MSP is of OTHER TYPE
-
-	// NOTE: as new types are added to this set,
-	// the mspTypes array below must be extended
 )
-
-var mspTypeStrings []string = []string{"bccsp", "idemix"}
-
-// ProviderTypeToString returns a string that represents the ProviderType integer
-func ProviderTypeToString(id ProviderType) string {
-	if int(id) < 0 || int(id) > len(mspTypeStrings) {
-		return ""
-	}
-
-	return mspTypeStrings[id]
-}

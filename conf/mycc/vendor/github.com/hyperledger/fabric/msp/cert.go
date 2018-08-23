@@ -1,17 +1,7 @@
 /*
-Copyright IBM Corp. 2017 All Rights Reserved.
+Copyright IBM Corp. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-		 http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+SPDX-License-Identifier: Apache-2.0
 */
 
 package msp
@@ -23,13 +13,19 @@ import (
 	"crypto/x509/pkix"
 	"encoding/asn1"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"math/big"
 	"time"
 
-	"github.com/hyperledger/fabric/bccsp/utils"
-	"github.com/pkg/errors"
+	"github.com/hyperledger/fabric/bccsp/sw"
 )
+
+type dsaSignature struct {
+	R, S *big.Int
+}
+
+type ecdsaSignature dsaSignature
 
 type validity struct {
 	NotBefore, NotAfter time.Time
@@ -75,13 +71,13 @@ func isECDSASignedCert(cert *x509.Certificate) bool {
 // that is equals to cert but the signature that is in low-S.
 func sanitizeECDSASignedCert(cert *x509.Certificate, parentCert *x509.Certificate) (*x509.Certificate, error) {
 	if cert == nil {
-		return nil, errors.New("certificate must be different from nil")
+		return nil, errors.New("Certificate must be different from nil.")
 	}
 	if parentCert == nil {
-		return nil, errors.New("parent certificate must be different from nil")
+		return nil, errors.New("Parent certificate must be different from nil.")
 	}
 
-	expectedSig, err := utils.SignatureToLowS(parentCert.PublicKey.(*ecdsa.PublicKey), cert.Signature)
+	expectedSig, err := sw.SignatureToLowS(parentCert.PublicKey.(*ecdsa.PublicKey), cert.Signature)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +104,7 @@ func sanitizeECDSASignedCert(cert *x509.Certificate, parentCert *x509.Certificat
 	newCert.Raw = nil
 	newRaw, err := asn1.Marshal(newCert)
 	if err != nil {
-		return nil, errors.Wrap(err, "marshalling of the certificate failed")
+		return nil, err
 	}
 
 	// 4. parse newRaw to get an x509 certificate
@@ -119,7 +115,7 @@ func certFromX509Cert(cert *x509.Certificate) (certificate, error) {
 	var newCert certificate
 	_, err := asn1.Unmarshal(cert.Raw, &newCert)
 	if err != nil {
-		return certificate{}, errors.Wrap(err, "unmarshalling of the certificate failed")
+		return certificate{}, err
 	}
 	return newCert, nil
 }

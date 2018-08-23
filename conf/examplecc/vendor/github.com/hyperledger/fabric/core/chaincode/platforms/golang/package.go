@@ -30,9 +30,9 @@ import (
 )
 
 var includeFileTypes = map[string]bool{
+	".s":    true,
 	".c":    true,
 	".h":    true,
-	".s":    true,
 	".go":   true,
 	".yaml": true,
 	".json": true,
@@ -87,7 +87,6 @@ func getCode(spec *pb.ChaincodeSpec) (*CodeDescriptor, error) {
 
 type SourceDescriptor struct {
 	Name, Path string
-	IsMetadata bool
 	Info       os.FileInfo
 }
 type SourceMap map[string]SourceDescriptor
@@ -116,20 +115,13 @@ func findSource(gopath, pkg string) (SourceMap, error) {
 		}
 
 		if info.IsDir() {
-
-			// Allow import of the top level chaincode directory into chaincode code package
 			if path == tld {
+				// We dont want to import any directories, but we don't want to stop processing
+				// at the TLD either.
 				return nil
 			}
 
-			// Allow import of META-INF metadata directories into chaincode code package tar.
-			// META-INF directories contain chaincode metadata artifacts such as statedb index definitions
-			if isMetadataDir(path, tld) {
-				logger.Debug("Files in META-INF directory will be included in code package tar:", path)
-				return nil
-			}
-
-			// Do not import any other directories into chaincode code package
+			// Do not recurse
 			logger.Debugf("skipping dir: %s", path)
 			return filepath.SkipDir
 		}
@@ -145,7 +137,7 @@ func findSource(gopath, pkg string) (SourceMap, error) {
 			return fmt.Errorf("error obtaining relative path for %s: %s", path, err)
 		}
 
-		sources[name] = SourceDescriptor{Name: name, Path: path, IsMetadata: isMetadataDir(path, tld), Info: info}
+		sources[name] = SourceDescriptor{Name: name, Path: path, Info: info}
 
 		return nil
 	}
@@ -155,9 +147,4 @@ func findSource(gopath, pkg string) (SourceMap, error) {
 	}
 
 	return sources, nil
-}
-
-// isMetadataDir checks to see if the current path is in the META-INF directory at the root of the chaincode directory
-func isMetadataDir(path, tld string) bool {
-	return strings.HasPrefix(path, filepath.Join(tld, "META-INF"))
 }

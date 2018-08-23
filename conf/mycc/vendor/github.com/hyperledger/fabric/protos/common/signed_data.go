@@ -87,7 +87,7 @@ func (env *Envelope) AsSignedData() ([]*SignedData, error) {
 		return nil, fmt.Errorf("GetSignatureHeaderFromBytes failed, err %s", err)
 	}
 
-	return []*SignedData{{
+	return []*SignedData{&SignedData{
 		Data:      env.Payload,
 		Identity:  shdr.Creator,
 		Signature: env.Signature,
