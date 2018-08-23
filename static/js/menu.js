@@ -379,7 +379,17 @@ var menu = {
                 console.log("success : ", result);
                 if (result.succ) {
                     console.log(result.msg)
+                    if (ccid == "") {
+                        alert("上传成功")
+                    } else {
+                        alert("升级成功")
+                    }
                 } else {
+                    if (ccid == "") {
+                        alert("上传成功")
+                    } else {
+                        alert("升级成功")
+                    }
                     console.log("upload chaincode failed : ", result.msg)
                 }
             },
@@ -390,8 +400,7 @@ var menu = {
     },
     // Test build and compress if build success
     uploadChaincode: function () {
-        console.log(000000000)
-        
+
         menu.saveAllFiles();
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
@@ -400,7 +409,6 @@ var menu = {
         // if ($(".uploadChaincode").hasClass("disabled")) {
         //     return false;
         // }
-        console.log(33333333333333)
 
         var request = newWideRequest();
         request.file = currentPath;
@@ -418,7 +426,6 @@ var menu = {
                 
                 console.log("success : ", result);
                 if (result.succ) {
-                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                     console.log(result)
                     
                     console.log(result.msg)

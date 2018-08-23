@@ -421,10 +421,6 @@ func addUser(username, password, email string) string {
 		if strings.ToLower(user.Name) == strings.ToLower(username) {
 			return userExists
 		}
-
-		if strings.ToLower(user.Email) == strings.ToLower(email) {
-			return emailExists
-		}
 	}
 
 	workspace := filepath.Join(conf.Wide.UsersWorkspaces, username)
