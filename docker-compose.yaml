@@ -7,6 +7,6 @@ services:
     ports:
       - 7070:7070
     volumes:
-      - ./conf:/opt/gopath/src/github.com/b3log/conf
-      - ./workspaces:/opt/gopath/src/github.com/b3log/workspaces
-      - ./static:/opt/gopath/src/github.com/b3log/static
+      - ./conf:/opt/gopath/src/github.com/b3log/wide/conf
+      - ./workspaces:/opt/gopath/src/github.com/b3log/wide/workspaces
+      - ./static:/opt/gopath/src/github.com/b3log/wide/static
