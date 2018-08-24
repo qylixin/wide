@@ -9,4 +9,3 @@ services:
     volumes:
       - ./conf:/opt/gopath/src/github.com/b3log/wide/conf
       - ./workspaces:/opt/gopath/src/github.com/b3log/wide/workspaces
-      - ./static:/opt/gopath/src/github.com/b3log/wide/static
