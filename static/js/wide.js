@@ -339,7 +339,17 @@ var wide = {
                 editor.focus();
             }
         });
+        $("#dialogUploadLoad").dialog({
+            "modal": true,
+            "height": 52,
+            "width": 260,
+            "title": config.label.goto_line,
+            "afterOpen": function () {
+                $("#dialogUploadLoad").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+                $("#dialogUploadLoad").closest(".dialog-main").find(".dialog-footer > button:eq(1)").prop("disabled", true);
 
+            },
+        });
         $("#dialogUploadPrompt").dialog({
             "modal": true,
             "height": 92,

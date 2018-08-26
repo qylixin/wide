@@ -360,6 +360,7 @@ var menu = {
     },
     // install chaincode
     installChaincode: function (path, name, ccid, channeluuid, netuuid) {
+        // $("#dialogUploadLoad").dialog("open");
         var request = newWideRequest();
         request.path = path;
         request.name = name;
@@ -382,13 +383,15 @@ var menu = {
                     if (ccid == "") {
                         alert("上传成功")
                     } else {
+                        $("#dialogUploadLoad").dialog("close");
                         alert("升级成功")
                     }
                 } else {
                     if (ccid == "") {
-                        alert("上传成功")
+                        alert("上传失败")
                     } else {
-                        alert("升级成功")
+                        $("#dialogUploadLoad").dialog("close");
+                        alert("升级失败")
                     }
                     console.log("upload chaincode failed : ", result.msg)
                 }
@@ -404,12 +407,14 @@ var menu = {
         menu.saveAllFiles();
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
+            alert("没有选择上传文件！")
             return false;
         }
         // if ($(".uploadChaincode").hasClass("disabled")) {
         //     return false;
         // }
 
+        $("#dialogUploadLoad").dialog("open");
         var request = newWideRequest();
         request.file = currentPath;
         request.code = wide.curEditor.getValue();
@@ -427,11 +432,12 @@ var menu = {
                 console.log("success : ", result);
                 if (result.succ) {
                     console.log(result)
-                    
+
                     console.log(result.msg)
                     sessionStorage.setItem("uploadPath", result.msg);
                     var ccid = sessionStorage.getItem("ccid");
                     if (ccid == "") {
+                        $("#dialogUploadLoad").dialog("close");
                         $("#dialogUploadPrompt").dialog("upload");
                     } else {
                         var name = "";
