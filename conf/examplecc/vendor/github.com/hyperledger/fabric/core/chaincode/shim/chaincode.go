@@ -230,9 +230,10 @@ func getPeerAddress() string {
 
 func newPeerClientConnection() (*grpc.ClientConn, error) {
 	var peerAddress = getPeerAddress()
-	if comm.TLSEnabled() {
-		return comm.NewClientConnectionWithAddress(peerAddress, true, true, comm.InitTLSForPeer())
-	}
+	// close the tls between peer and chaincode
+	// if comm.TLSEnabled() {
+	// 	return comm.NewClientConnectionWithAddress(peerAddress, true, true, comm.InitTLSForPeer())
+	// }
 	return comm.NewClientConnectionWithAddress(peerAddress, true, false, nil)
 }
 

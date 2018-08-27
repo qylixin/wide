@@ -7,8 +7,8 @@ SPDX-License-Identifier: Apache-2.0
 package comm
 
 import (
-	"crypto/tls"
-	"crypto/x509"
+	tls "github.com/peersafe/gm-crypto/gmtls"
+	x509 "github.com/peersafe/gm-crypto/sm2"
 	"encoding/pem"
 	"errors"
 	"fmt"

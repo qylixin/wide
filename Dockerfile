@@ -1,4 +1,4 @@
-FROM peersafes/fabric-ccenv:1.0.4
+FROM peersafes/fabric-ccenv:1.0.4-gm
 MAINTAINER peersafe
 
 ADD . /opt/gopath/src/github.com/b3log/wide
