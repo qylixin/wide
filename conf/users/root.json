@@ -16,7 +16,7 @@
     "Keymap": "wide",
     "Created": 1531479981744425920,
     "Updated": 1531479981744425920,
-    "Lived": 1534921769565850260,
+    "Lived": 1548050723153234200,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "inherit",
@@ -26,9 +26,11 @@
     },
     "LatestSessionContent": {
         "fileTree": [
+            "/opt/gopath/src/github.com/b3log/wide/workspaces/root/src",
+            "/opt/gopath/src/github.com/b3log/wide/workspaces/root/src/examplecc",
+            "/opt/gopath/src/github.com/b3log/wide/workspaces/root/src/examplecc/examplecc_1.0.4"
         ],
-        "files": [
-        ],
+        "files": [],
         "currentFile": "",
         "layout": {
             "side": {

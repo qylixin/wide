@@ -2,10 +2,11 @@ version: '2'
 services:
   wide:
     container_name: wide
-    image: peersafe/wide
-    command: ./wide -docker=true -ip=192.168.0.116 -channel=ws://192.168.0.116:7070 -server=0.0.0.0:7070 -log_level=debug
+    image: peersafes/wide
+    command: ./wide -docker=true -ip=192.168.0.118 -channel=ws://192.168.0.118:7070 -server=0.0.0.0:7070 -log_level=debug
     ports:
       - 7070:7070
     volumes:
       - ./conf:/opt/gopath/src/github.com/b3log/wide/conf
       - ./workspaces:/opt/gopath/src/github.com/b3log/wide/workspaces
+      - ./LICENSE:/opt/gopath/src/github.com/b3log/wide/LICENSE

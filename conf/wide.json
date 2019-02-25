@@ -16,5 +16,5 @@
     "UsersWorkspaces": "${WD}/workspaces",
     "AllowRegister": true,
     "Autocomplete": true,
-    "BcapAddress": "http://192.168.0.16:8888/v2"
+    "BcapAddress": "http://192.168.0.118:8888/v3/fabric"
 }

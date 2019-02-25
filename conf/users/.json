@@ -1,0 +1,28 @@
+{
+    "Name": "",
+    "Password": "206f6c5e3970142b92e127726d7020c110f045a6",
+    "Salt": "spgneuskcmxuuvjl",
+    "Email": "",
+    "Gravatar": "d41d8cd98f00b204e9800998ecf8427e",
+    "Workspace": "/opt/gopath/src/github.com/b3log/wide/workspaces",
+    "Locale": "en_US",
+    "GoFormat": "gofmt",
+    "GoBuildArgsForLinux": "-i",
+    "GoBuildArgsForWindows": "-i",
+    "GoBuildArgsForDarwin": "-i",
+    "FontFamily": "Helvetica",
+    "FontSize": "13px",
+    "Theme": "default",
+    "Keymap": "wide",
+    "Created": 1535277381169767000,
+    "Updated": 1535277381169767000,
+    "Lived": 1535277381169767000,
+    "Editor": {
+        "FontFamily": "Consolas, 'Courier New', monospace",
+        "FontSize": "inherit",
+        "LineHeight": "17px",
+        "Theme": "wide",
+        "TabSize": "4"
+    },
+    "LatestSessionContent": null
+}
