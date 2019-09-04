@@ -113,8 +113,11 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	parentDir := filepath.Dir(curDir)
 	project := filepath.Base(curDir)
 	fmt.Println(project)
-
-	cmd = exec.Command("tar", "-zcvf", project+".tar.gz", project)
+	if project == "examplecc_1.1.1-gm" {
+		cmd = exec.Command("tar", "-zcvf", project+".tar.gz", "--exclude=vendor", project)
+	} else {
+		cmd = exec.Command("tar", "-zcvf", project+".tar.gz", project)
+	}
 	cmd.Dir = parentDir
 
 	if err := cmd.Start(); nil != err {
