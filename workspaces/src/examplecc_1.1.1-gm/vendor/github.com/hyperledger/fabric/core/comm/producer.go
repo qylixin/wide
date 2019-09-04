@@ -72,8 +72,8 @@ func (cp *connProducer) NewConnection() (*grpc.ClientConn, string, error) {
 		}
 	}
 
-	cp.RLock()
-	defer cp.RUnlock()
+	cp.Lock()
+	defer cp.Unlock()
 
 	for endpoint, timeout := range cp.disabledEndpoints {
 		if time.Since(timeout) >= EndpointDisableInterval {

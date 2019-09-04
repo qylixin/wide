@@ -133,10 +133,7 @@ func TLSEnabled() bool {
 // GetDefaultOrdererAddress return cached value for
 // "peer.gossip.defaultOrdererAddress" configuration value
 func GetDefaultOrdererAddress() string {
-	if !configurationCached {
-		cacheConfiguration()
-	}
-	return defaultOrdererAddr
+	return viper.GetString("peer.gossip.defaultOrdererAddress")
 }
 
 // MaxRecvMsgSize returns the maximum message size in bytes that gRPC clients
