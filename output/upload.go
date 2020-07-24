@@ -26,7 +26,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strconv"
 )
 
 // UploadHandler handles request of uploading.
@@ -246,7 +245,7 @@ func InstallChaincode(w http.ResponseWriter, r *http.Request) {
 		logger.Error(err)
 		result.Succ = false
 		result.Msg = cc.ErrMsg
-		result.Code = strconv.Itoa(cc.ErrCode)
+		result.Code = cc.ErrCode
 		return
 	}
 

@@ -390,11 +390,10 @@ var wide = {
                 console.log(channels)
                 var goFileHTML = '';
                 for (var i = 0, max = channels.length; i < max; i++) {
-                    console.log(!channels[i].ccs[0])
-                    if(!channels[i].ccs[0]){
-                        var name = channels[i].name;
-                        goFileHTML = goFileHTML + '<option value="' + channels[i].uuid + '">' + name + '</option>'
-                    }
+                    // if(!channels[i].ccs[0]){
+                    var name = channels[i].name;
+                    goFileHTML = goFileHTML + '<option value="' + channels[i].uuid + '">' + name + '</option>'
+                    // }
                 }
                 // if(goFileHTML == ""){
                 //     alert("无可用的业务通道")
