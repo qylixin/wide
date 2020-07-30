@@ -26,6 +26,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 // UploadHandler handles request of uploading.
@@ -112,7 +113,8 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	parentDir := filepath.Dir(curDir)
 	project := filepath.Base(curDir)
 	fmt.Println(project)
-	if project == "examplecc_1.1.1-gm" {
+	isHave := strings.Contains(project, "-gm")
+	if isHave {
 		cmd = exec.Command("tar", "-zcvf", project+".tar.gz", "--exclude=vendor", project)
 	} else {
 		cmd = exec.Command("tar", "-zcvf", project+".tar.gz", project)
